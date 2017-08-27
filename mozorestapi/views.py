@@ -66,9 +66,9 @@ class TransactionViewSet(viewsets.ModelViewSet):
         serializer.save(fromUser=self.request.user)
 
 
-class CustomObtainAuthToken(ObtainAuthToken):
+class getUserAndAuth(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        response = super(getUserAndAuth, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
         user = MyUser.objects.get(id=token.user_id)
         userSerializer = UserSerializer(user)
