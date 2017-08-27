@@ -70,35 +70,9 @@ class CustomObtainAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
         response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
-        return Response({'token': token.key, 'id': token.user_id})
-
-
-@api_view(['POST'])
-def SocialAuthGoogle(request):
-    if request.method == 'POST':
-        token = request.data['token']
-        url = 'https://www.googleapis.com/userinfo/v2/me'
-        header = {'Authorization': 'Bearer ' + token}
-        r = requests.get(url, headers=header)
-        data = json.loads(r.text)
-        print data
-        if 'error' in data:
-            resData = {'Error': 'Invalid Credentials ! This event will be reported'}
-        else:
-            try:
-                user = MyUser.objects.get(username=data['email'])
-                serializer = UserSerializer(user)
-                token = Token.objects.get(user=user)
-            except MyUser.DoesNotExist:
-                newUser = {'username': data['email'], 'email': data['email'], 'first_name': data['given_name'],
-                           'last_name': data['family_name'], 'password': 'shotu123'}
-                serializer = UserSerializer(data=newUser)
-                if serializer.is_valid():
-                    serializer.save()
-                    user = MyUser.objects.get(username=serializer.data['email'])
-                    token, created = Token.objects.get_or_create(user=user)
-            resData = {'token': token.key, 'userData': serializer.data}
-        return Response(resData)
+        user = MyUser.objects.get(id=token.user_id)
+        userSerializer = UserSerializer(user)
+        return Response({'token': token.key, 'user': userSerializer.data})
 
 
 @api_view(['POST'])
