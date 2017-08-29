@@ -16,14 +16,13 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
-from mozorestapi.views import UsersViewSet, getUserAndAuth, AccountViewSet, TransactionViewSet, ExpenseViewSet, \
+from mozorestapi.views import UsersViewSet, getUserAndAuth, TransactionViewSet, ExpenseViewSet, \
     SocialAuthFacebook, SocialAuthGoogle, SearchFriends
 from rest_framework.authtoken import views
 
 
 router = routers.DefaultRouter()
 router.register('user', UsersViewSet)
-router.register('account', AccountViewSet)
 router.register('transaction', TransactionViewSet)
 router.register('expenses', ExpenseViewSet)
 

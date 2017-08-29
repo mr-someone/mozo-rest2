@@ -1,10 +1,6 @@
-import json
-
 from rest_framework import serializers
-from django.conf import settings
 from rest_framework.relations import PrimaryKeyRelatedField
-
-from mozorestapi.models import Transactions, Expenses, Account
+from mozorestapi.models import Transactions, Expenses
 from .models import MyUser
 
 
@@ -35,7 +31,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = MyUser
-        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'facebook_id', 'google_id', 'profile_pic', 'friends')
+        fields = ('id', 'username', 'email', 'password', 'first_name', 'last_name', 'facebook_id', 'google_id', 'profile_pic', 'balance', 'friends')
 
 
 class TransactionsSerializer(serializers.HyperlinkedModelSerializer):
@@ -53,15 +49,6 @@ class ExpensesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Expenses
         fields = ('__all__')
-
-
-class AccountSerializer(serializers.HyperlinkedModelSerializer):
-    accountUser = serializers.ReadOnlyField(source='accountUser.username')
-
-    class Meta:
-        model = Account
-        fields = ('__all__')
-
 
 class FriendsSerializer(serializers.ModelSerializer):
     class Meta:

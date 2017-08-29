@@ -13,11 +13,7 @@ class MyUser(AbstractUser):
     google_id = models.CharField(max_length=100, default='null', blank=True)
     profile_pic = models.CharField(default='null', max_length=300, blank=True)
     friends = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
-
-
-class Account(models.Model):
-    accountUser = models.ForeignKey('mozorestapi.MyUser', related_name='account', on_delete=models.CASCADE)
-    accountAmount = models.FloatField(default=0)
+    balance = models.FloatField(default=0)
 
 
 class Transactions(models.Model):

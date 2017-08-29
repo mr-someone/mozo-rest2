@@ -12,10 +12,9 @@ from rest_framework.authentication import TokenAuthentication, BasicAuthenticati
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from mozorestapi.serializers import UserSerializer, FriendsSerializer, TransactionsSerializer, ExpensesSerializer, \
-    AccountSerializer
+from mozorestapi.serializers import UserSerializer, FriendsSerializer, TransactionsSerializer, ExpensesSerializer
 from rest_framework.authtoken.models import Token
-from .models import MyUser, Transactions, Expenses, Account
+from .models import MyUser, Transactions, Expenses
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -36,16 +35,6 @@ class UsersViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
 
 
-class AccountViewSet(viewsets.ModelViewSet):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
-    authentication_classes = (TokenAuthentication, BasicAuthentication)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def perform_create(self, serializer):
-        serializer.save(accountUser=self.request.user)
-
-
 class ExpenseViewSet(viewsets.ModelViewSet):
     queryset = Expenses.objects.all()
     serializer_class = ExpensesSerializer
@@ -54,6 +43,10 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(expenseUser=self.request.user)
+
+    def get_object(self):
+        expenses = Expenses.objects.filter(expenseUser=self.request.user)
+        return ExpensesSerializer(expenses, many=True).data
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -64,6 +57,10 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(fromUser=self.request.user)
+
+    def get_object(self):
+        transactions = Transactions.objects.filter(fromUser=self.request.user)
+        return TransactionsSerializer(transactions, many=True).data
 
 
 class getUserAndAuth(ObtainAuthToken):
