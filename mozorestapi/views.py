@@ -74,6 +74,16 @@ class getUserAndAuth(ObtainAuthToken):
         userSerializer = UserSerializer(user)
         return Response({'token': token.key, 'user': userSerializer.data})
 
+@api_view(['POST'])
+def SearchFriends(request):
+    if request.method == 'POST':
+        if 'last_name' in request.data:
+            user = MyUser.objects.filter(first_name__contains=request.data['first_name']).filter(last_name__contains=request.data['lastname'])
+        else:
+            user = MyUser.objects.filter(first_name__contains=request.data['first_name'])
+        friendsList = FriendsSerializer(user, many=True)
+        return Response(friendsList.data)
+
 
 @api_view(['POST'])
 def SocialAuthFacebook(request):

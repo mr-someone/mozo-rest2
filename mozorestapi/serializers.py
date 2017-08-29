@@ -61,3 +61,9 @@ class AccountSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Account
         fields = ('__all__')
+
+
+class FriendsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MyUser
+        fields = ('id', 'first_name', 'last_name', 'email', 'profile_pic')

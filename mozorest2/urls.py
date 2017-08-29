@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 from mozorestapi.views import UsersViewSet, getUserAndAuth, AccountViewSet, TransactionViewSet, ExpenseViewSet, \
-    SocialAuthFacebook, SocialAuthGoogle
+    SocialAuthFacebook, SocialAuthGoogle, SearchFriends
 from rest_framework.authtoken import views
 
 
@@ -34,7 +34,8 @@ urlpatterns = [
     url(r'^get-user-and-auth/', getUserAndAuth.as_view()),
     url(r'^social-fb/', SocialAuthFacebook),
     url(r'^social-google/', SocialAuthGoogle),
-    url(r'^auth-user-token/', views.obtain_auth_token)
+    url(r'^auth-user-token/', views.obtain_auth_token),
+    url(r'^search-friends/', SearchFriends)
 ]
 urlpatterns += [
 
