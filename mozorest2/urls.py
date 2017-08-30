@@ -17,13 +17,13 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from rest_framework import routers
 from mozorestapi.views import UsersViewSet, getUserAndAuth, TransactionViewSet, ExpenseViewSet, \
-    SocialAuthFacebook, SocialAuthGoogle, SearchFriends
+    SocialAuthFacebook, SocialAuthGoogle, SearchFriends, GetFriendDetail
 from rest_framework.authtoken import views
 
 
 router = routers.DefaultRouter()
 router.register('user', UsersViewSet)
-router.register('transaction', TransactionViewSet)
+router.register('transactions', TransactionViewSet)
 router.register('expenses', ExpenseViewSet)
 
 urlpatterns = [
@@ -34,7 +34,8 @@ urlpatterns = [
     url(r'^social-fb/', SocialAuthFacebook),
     url(r'^social-google/', SocialAuthGoogle),
     url(r'^auth-user-token/', views.obtain_auth_token),
-    url(r'^search-friends/', SearchFriends)
+    url(r'^search-friends/', SearchFriends),
+    url(r'^get-friends/', GetFriendDetail)
 ]
 urlpatterns += [
 

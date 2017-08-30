@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-
 import json
-
 import requests
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -41,12 +38,12 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication, BasicAuthentication)
     permission_classes = (permissions.IsAuthenticated,)
 
+    def list(self, request, *args, **kwargs):
+        expenses = Expenses.objects.filter(expenseUser= request.user)
+        return Response(ExpensesSerializer(expenses, many=True, context={'request': request}).data)
+
     def perform_create(self, serializer):
         serializer.save(expenseUser=self.request.user)
-
-    def get_object(self):
-        expenses = Expenses.objects.filter(expenseUser=self.request.user)
-        return ExpensesSerializer(expenses, many=True).data
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -55,12 +52,13 @@ class TransactionViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
-    def perform_create(self, serializer):
-        serializer.save(fromUser=self.request.user)
-
-    def get_object(self):
+    def list(self, request, *args, **kwargs):
         transactions = Transactions.objects.filter(fromUser=self.request.user)
-        return TransactionsSerializer(transactions, many=True).data
+        return Response(TransactionsSerializer(transactions, many=True).data)
+
+    def perform_create(self, serializer):
+        toUser = MyUser.objects.get(username=self.request.data['toUser'])
+        serializer.save(fromUser=self.request.user, toUser = toUser)
 
 
 class getUserAndAuth(ObtainAuthToken):
@@ -81,6 +79,11 @@ def SearchFriends(request):
         friendsList = FriendsSerializer(user, many=True)
         return Response(friendsList.data)
 
+@api_view(['POST'])
+def GetFriendDetail(request):
+    user = MyUser.objects.filter(id__in=request.data)
+    friendDetailList = FriendsSerializer(user, many=True)
+    return Response(friendDetailList.data)
 
 @api_view(['POST'])
 def SocialAuthFacebook(request):

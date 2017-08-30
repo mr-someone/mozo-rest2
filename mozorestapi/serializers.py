@@ -7,7 +7,7 @@ from .models import MyUser
 class FriendsSerializer(PrimaryKeyRelatedField, serializers.ModelSerializer):
     class Meta:
         model = MyUser
-        fields = ('id', 'username')
+        fields = ('id', 'username', 'profile_pic')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -40,7 +40,7 @@ class TransactionsSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Transactions
-        fields = ('transactionType', 'toUser', 'fromUser', 'transactionAmount', 'transactionStatus')
+        fields = ('transactionType', 'toUser', 'fromUser', 'transactionAmount', 'transactionStatus', 'transactionDetail')
 
 
 class ExpensesSerializer(serializers.HyperlinkedModelSerializer):
